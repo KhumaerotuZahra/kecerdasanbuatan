@@ -1,8 +1,10 @@
 import streamlit as st
 import requests
 import os
+from dotenv import load_dotenv
 
-API_KEY = os.getenv("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")
+load_dotenv()
+API_KEY = os.getenv("OPENROUTER_API_KEY")
 MODEL = "openai/gpt-3.5-turbo"
 
 def analyze_sentiment_gpt(text):

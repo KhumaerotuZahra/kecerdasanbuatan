@@ -7,7 +7,6 @@ Original file is located at
     https://colab.research.google.com/drive/1cjypJ2SiX-FH97Ng-LSpN7vN6mViFKBp
 """
 
-pip install openai transformers
 
 from transformers import pipeline, BartTokenizer, BartForConditionalGeneration
 import textwrap

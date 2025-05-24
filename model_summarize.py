@@ -7,22 +7,27 @@ Original file is located at
     https://colab.research.google.com/drive/1cjypJ2SiX-FH97Ng-LSpN7vN6mViFKBp
 """
 
-# !pip install openai transformers
 import streamlit as st
 from transformers import pipeline
 import textwrap
 
-# Inisialisasi model BART
-summarizer = pipeline("summarization", model="facebook/bart-large-cnn")
-
-# UI Streamlit
 st.title("Ringkasan Teks dengan BART")
+
+# Inisialisasi pipeline summarization (model facebook/bart-large-cnn)
+@st.cache_resource(show_spinner=False)
+def load_summarizer():
+    return pipeline("summarization", model="facebook/bart-large-cnn")
+
+summarizer = load_summarizer()
+
+# Text input dari pengguna
 user_text = st.text_area("Masukkan teks yang ingin diringkas:")
 
 if st.button("Ringkas"):
-    if user_text:
-        bart_summary = summarizer(user_text, max_length=150, min_length=40, do_sample=False)[0]['summary_text']
+    if user_text.strip():
+        summary = summarizer(user_text, max_length=150, min_length=40, do_sample=False)[0]['summary_text']
         st.subheader("Hasil Ringkasan:")
-        st.write(textwrap.fill(bart_summary, width=80))
+        st.write(textwrap.fill(summary, width=80))
     else:
         st.warning("Silakan masukkan teks terlebih dahulu.")
+

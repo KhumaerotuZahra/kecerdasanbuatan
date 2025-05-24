@@ -9,20 +9,21 @@ Original file is located at
 
 # !pip install openai transformers
 
+
 from transformers import pipeline
 import textwrap
 
 # Inisialisasi model BART
 summarizer = pipeline("summarization", model="facebook/bart-large-cnn")
 
-# Input dari pengguna
-user_text = input("Masukkan teks yang ingin diringkas:\n")
+# Streamlit UI
+st.title("Ringkasan Teks dengan BART")
+user_text = st.text_area("Masukkan teks yang ingin diringkas:", height=200)
 
-# Ringkasan oleh BART
-bart_summary = summarizer(user_text, max_length=150, min_length=40, do_sample=False)[0]['summary_text']
-
-# Tampilkan hasil ringkasan dengan pembungkusan teks
-print("\nRingkasan oleh BART:")
-print("=" * 50)
-print(textwrap.fill(bart_summary, width=80))  # Bungkus 80 karakter per baris
-print("=" * 50)
+if st.button("Ringkas"):
+    if user_text.strip() == "":
+        st.warning("Teks tidak boleh kosong!")
+    else:
+        bart_summary = summarizer(user_text, max_length=150, min_length=40, do_sample=False)[0]['summary_text']
+        st.subheader("Ringkasan:")
+        st.write(textwrap.fill(bart_summary, width=80))

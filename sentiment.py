@@ -1,7 +1,8 @@
 import streamlit as st
 import requests
+import os
 
-API_KEY = "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" 
+API_KEY = os.getenv("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")
 MODEL = "openai/gpt-3.5-turbo"
 
 def analyze_sentiment_gpt(text):
@@ -9,29 +10,28 @@ def analyze_sentiment_gpt(text):
         {"role": "system", "content": "Kamu adalah asisten analisis sentimen yang hanya boleh membalas dengan kata 'Positif', 'Negatif', atau 'Netral', tanpa penjelasan tambahan."},
         {"role": "user", "content": f"Tolong analisis sentimen dari kalimat ini:\n{text}"}
     ]
-    
-    response = requests.post(
-        "https://openrouter.ai/api/v1/chat/completions",
-        headers={
-            "Authorization": f"Bearer {API_KEY}",
-            "Content-Type": "application/json"
-        },
-        json={
-            "model": MODEL,
-            "messages": messages,
-            "temperature": 0,
-            "max_tokens": 10
-        }
-    )
-    
-    if response.status_code == 200:
+    try:
+        response = requests.post(
+            "https://openrouter.ai/api/v1/chat/completions",
+            headers={
+                "Authorization": f"Bearer {API_KEY}",
+                "Content-Type": "application/json"
+            },
+            json={
+                "model": MODEL,
+                "messages": messages,
+                "temperature": 0,
+                "max_tokens": 10
+            }
+        )
+        response.raise_for_status()
         result = response.json()
         sentiment = result['choices'][0]['message']['content'].strip().capitalize()
         if sentiment not in ['Positif', 'Negatif', 'Netral']:
             sentiment = "Tidak dapat menentukan sentimen"
         return sentiment
-    else:
-        return f"Error: {response.status_code} - {response.text}"
+    except Exception as e:
+        return f"Error: {e}"
 
 st.title("Analisis Sentimen dengan GPT (OpenRouter API)")
 

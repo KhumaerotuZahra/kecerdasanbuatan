@@ -35,7 +35,8 @@ def analyze_sentiment_gpt(text):
     except Exception as e:
         return f"Error: {e}"
 
-st.title("Analisis Sentimen dengan GPT (OpenRouter API)")
+st.markdown("## 🧠 Analisis Sentimen dengan GPT ")
+
 
 user_input = st.text_area("Masukkan kalimat untuk analisis sentimen:")
 
